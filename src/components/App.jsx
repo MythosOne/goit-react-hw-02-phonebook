@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid';
 import ContactForm from './ContactForm';
 import Filter from './Filter';
 import ContactList from './ContactList';
+import { Container, TitleContainer, TitleContacts, Message } from './App.styled';
 
 export class App extends Component {
 state = {
@@ -15,18 +16,18 @@ state = {
     filter: "",
   };
 
-  addContact = task => {
+  addContact = event => {
+    const loweredCase = event.name.toLowerCase().trim();
     const searchName = this.state.contacts
-      .map((cont) => cont.name)
-      .includes(task.name);
+      .some((cont) => cont.name.toLowerCase().trim() === loweredCase);
 
     if (searchName) {
-      alert(`${task.name} is already in contacts`);
-    } else if (task.name.length === 0) {
+      alert(`${event.name} is already in contacts`);
+    } else if (event.name.length === 0) {
       alert("Fields must be filled!");
     } else {
       const contact = {
-        ...task,
+        ...event,
         id: nanoid(),
       };
 
@@ -55,21 +56,23 @@ state = {
   };
 
   render() {
-    const { filter } = this.state;
+    const { filter, contacts } = this.state;
     const visibleContacts = this.getVisibleContacts();
 
     return (
-      <>
-        <h1>Phonebook</h1>
+      <Container>
+        <TitleContainer>Phonebook</TitleContainer>
 
         <ContactForm onAddContact={this.addContact} />
-        <h2>Contacts</h2>
-          <Filter value={filter} onChangeFilter={this.changeFilter} />
+        <TitleContacts>Contacts</TitleContacts>
+        <Filter value={filter} onChangeFilter={this.changeFilter} />
           <ContactList
             contacts={visibleContacts}
             onDeleteContact={this.deleteContact}
-          />
-      </>
+        />
+        <Message>{contacts.length === 0 &&
+          'You do not have contacts 😯'}</Message>
+      </Container>
   );
   }
 };

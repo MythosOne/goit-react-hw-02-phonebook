@@ -1,10 +1,15 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Form, Label, AddButton, Input } from './App.styled';
 
 export class ContactForm extends Component {
     state = {
         name: "",
         number: "",
+    };
+
+    static propTypes = {
+        onAddContact: PropTypes.func.isRequired,
     };
 
     handleChange = event => {
@@ -17,7 +22,6 @@ export class ContactForm extends Component {
     handleSubmit = event => {
         event.preventDefault();
 
-        // this.props.onSubmit(this.state);
         this.props.onAddContact({ ...this.state });
         
         this.setState({ name: "", number: "" });
@@ -25,10 +29,10 @@ export class ContactForm extends Component {
 
     render() {
         return (
-            <form onSubmit={this.handleSubmit}>
-                <label>
+            <Form onSubmit={this.handleSubmit}>
+                <Label>
                     Name
-                    <input
+                    <Input
                         type="text"
                         name="name"
                         value={this.state.name}
@@ -38,28 +42,24 @@ export class ContactForm extends Component {
                         placeholder="Enter name"
                         required
                     />
-                </label>
-                <label>
+                </Label>
+                <Label>
                     Number
-                    <input
-                        type="text"
+                    <Input
+                        type="tel"
                         name="number"
                         value={this.state.number}
                         onChange={this.handleChange}
-                        pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-                        title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+                        pattern="\d{3}[-]\d{2}[-]\d{2}"
+                        title="The phone number must consist of numbers and a dash ###-##-##"
                         placeholder="Enter phone number"
                         required
                     />
-                </label>
-                <button type='submit'>Add Contact</button>
-            </form>
+                </Label>
+                <AddButton type='submit'>Add Contact</AddButton>
+            </Form>
         );
     };
 };
-
-ContactForm.propTypes = {
-    onAddContact: PropTypes.func.isRequired,
-}
 
 export default ContactForm
